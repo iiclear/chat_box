@@ -3,19 +3,13 @@ import requests
 import re
 import time
 from bs4 import BeautifulSoup
-
-class BS:
-    def __init__(self,url):
-        self.url =url
-    def analysis(self):
-        web_data = requests.get(self.url).content
-        soup = BeautifulSoup(web_data, 'lxml')
-        return soup
+import random
 
 
 class YouTuSpider:
     def __init__(self):
      self.url = 'http://www.ccutu.com/wenwen/'
+
 
     # 爬取http://www.ccutu.com/wenwen/2/，http://www.ccutu.com/wenwen/3/
     # 像这样的链接里面的问题标题的链接，
@@ -27,7 +21,8 @@ class YouTuSpider:
         while page <= 1112:
             start_url = self.url + str(page) + '/'
             page = page + 1
-            soup = BS(start_url).analysis()
+            web_data = requests.get(start_url).content
+            soup = BeautifulSoup(web_data, 'lxml')
             items = soup.select('#form1 > div.wenda_cont > div._cont_left > ul > li > a')
             # 'http://www.ccutu.com/wenwen/answer35452.html'
             for item in items:
@@ -41,28 +36,24 @@ class YouTuSpider:
     def qa_data(self,urls):
         item = {}
         qa_list = []
-        for url in urls:
-            web_data = requests.get(url).content
-            soup = BeautifulSoup(web_data, 'lxml')
-            question = soup.select_one('body > div.wenda_cont > div.con_left > dl > h1').get_text().strip()
-            answer = ''.join(re.findall(r'<p>(.*?)</p>', str(
-                soup.select_one('body > div.wenda_cont > div.con_left > ul > li')))).replace('<br/>', '')
-            # answer = soup.select('body > div.wenda_cont > div.con_left > ul:nth-child(3) > li')
+        with open(r'../corpus/youtu.txt', 'a+') as f:
+            for url in urls:
+                web_data = requests.get(url).content
+                soup = BeautifulSoup(web_data, 'lxml')
+                #time.sleep(random.randint(1, 3))
+                question = soup.select_one('body > div.wenda_cont > div.con_left > dl > h1').get_text().strip()
+                answer = ''.join(re.findall(r'<p>(.*?)</p>', str(soup.select_one('body > div.wenda_cont > div.con_left > ul > li')))).replace('<br/>', '')
+                # answer = soup.select('body > div.wenda_cont > div.con_left > ul:nth-child(3) > li')
 
-            item = {
-                'question': question,
-                'answer': answer
-            }
+                item = {
+                    'question': question,
+                    'answer': answer
+                }
+                f.write(item['question'] + '\n' + item['answer'] + '\n')
 
-            qa_list.append(item)
 
-        return qa_list
 
-    def wirte_to_file(self,qa_list):
-        with open('qa.txt', 'w') as f:
-            for qa in qa_list:
-                f.write(qa['question'] + '\n' + qa['answer'] + '\n')
-        f.close()
+
 
 
 
@@ -71,8 +62,7 @@ class YouTuSpider:
 def main():
     spider = YouTuSpider()
     urls = spider.page_url()
-    qa_list = spider.qa_data(urls)
-    spider.wirte_to_file(qa_list)
+    spider.qa_data(urls)
 
 
 if __name__ == '__main__':
