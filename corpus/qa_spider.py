@@ -40,7 +40,7 @@ class YouTuSpider:
             for url in urls:
                 web_data = requests.get(url).content
                 soup = BeautifulSoup(web_data, 'lxml')
-                #time.sleep(random.randint(1, 3))
+                time.sleep(random.randint(1, 3))
                 question = soup.select_one('body > div.wenda_cont > div.con_left > dl > h1').get_text().strip()
                 answer = ''.join(re.findall(r'<p>(.*?)</p>', str(soup.select_one('body > div.wenda_cont > div.con_left > ul > li')))).replace('<br/>', '')
                 # answer = soup.select('body > div.wenda_cont > div.con_left > ul:nth-child(3) > li')
@@ -61,7 +61,9 @@ class YouTuSpider:
 
 def main():
     spider = YouTuSpider()
+    print(1)
     urls = spider.page_url()
+    print(2)
     spider.qa_data(urls)
 
 
