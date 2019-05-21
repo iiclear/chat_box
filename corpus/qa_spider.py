@@ -6,6 +6,9 @@ from bs4 import BeautifulSoup
 import random
 
 
+import io
+import sys
+
 class YouTuSpider:
     def __init__(self):
      self.url = 'http://www.ccutu.com/wenwen/'
@@ -26,6 +29,7 @@ class YouTuSpider:
             items = soup.select('#form1 > div.wenda_cont > div._cont_left > ul > li > a')
             # 'http://www.ccutu.com/wenwen/answer35452.html'
             for item in items:
+                print(item)
                 urls.append('http://www.ccutu.com' + item.get('href'))
         # print(urls,len(urls))
         return urls
@@ -36,10 +40,10 @@ class YouTuSpider:
     def qa_data(self,urls):
         item = {}
         qa_list = []
-        with open(r'../corpus/youtu.txt', 'a+') as f:
+        with open(r'../corpus/youtu.txt', 'wb') as f:
             for url in urls:
-                web_data = requests.get(url).content
-                soup = BeautifulSoup(web_data, 'lxml')
+                web_data = requests.get(url)
+                soup = BeautifulSoup(web_data.content, 'lxml')
                 time.sleep(random.randint(1, 3))
                 question = soup.select_one('body > div.wenda_cont > div.con_left > dl > h1').get_text().strip()
                 answer = ''.join(re.findall(r'<p>(.*?)</p>', str(soup.select_one('body > div.wenda_cont > div.con_left > ul > li')))).replace('<br/>', '')
@@ -49,9 +53,14 @@ class YouTuSpider:
                     'question': question,
                     'answer': answer
                 }
-                f.write(item['question'] + '\n' + item['answer'] + '\n')
+                print(item)
+
+                f.write((item['question']+'\n').encode('gbk','ignore') )
+
+                f.write((item['answer']+'\n').encode('gbk', 'ignore'))
 
 
+        f.close()
 
 
 
@@ -65,6 +74,7 @@ def main():
     urls = spider.page_url()
     print(2)
     spider.qa_data(urls)
+    print(3)
 
 
 if __name__ == '__main__':
