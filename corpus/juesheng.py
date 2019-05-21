@@ -4,10 +4,10 @@ from bs4 import BeautifulSoup
 
 
 url = 'http://ask.juesheng.com/all/answered/'
-#ÅÀÈ¡http://www.ccutu.com/wenwen/2/£¬http://www.ccutu.com/wenwen/3/
-# ÏñÕâÑùµÄÁ´½ÓÀïÃæµÄÎÊÌâ±êÌâµÄÁ´½Ó£¬
-# ±ÈÈç£ºhttp://www.ccutu.com/wenwen/answer35435.html
-#°ÑÕâĞ©Á´½Ó´æµ½Ò»¸öÁĞ±íurlsÀïÃæ£¬·µ»ØÕâ¸öÁĞ±í
+#çˆ¬å–http://www.ccutu.com/wenwen/2/ï¼Œhttp://www.ccutu.com/wenwen/3/
+# åƒè¿™æ ·çš„é“¾æ¥é‡Œé¢çš„é—®é¢˜æ ‡é¢˜çš„é“¾æ¥ï¼Œ
+# æ¯”å¦‚ï¼šhttp://www.ccutu.com/wenwen/answer35435.html
+#æŠŠè¿™äº›é“¾æ¥å­˜åˆ°ä¸€ä¸ªåˆ—è¡¨urlsé‡Œé¢ï¼Œè¿”å›è¿™ä¸ªåˆ—è¡¨
 def page_url(url):
     urls = []
     pag = 1
@@ -24,9 +24,9 @@ def page_url(url):
     return urls
 
 
-# ²ÎÊıÊÇpage_url()º¯Êı·µ»ØµÄÁĞ±í£¬´ÓÖĞÈ¡³öÎÊ´ğµÄÁ´½Ó£¬È»ºóÅÀÈ¡ÎÊ´ğ¡£
-# °ÑÃ¿Ò»¶ÔÎÊ´ğ´æ³É×Öµä£¬ÔÙ°Ñ×Öµä´æµ½ÁĞ±íÖĞ£¬·µ»ØÕâ¸öÁĞ±í
-# ¿ÉÒÔ²Î¿¼ÎÒ¸øÄã¸ÄµÄyoutu()º¯ÊıÖĞ×ÖµäµÄ²¿·Ö
+# å‚æ•°æ˜¯page_url()å‡½æ•°è¿”å›çš„åˆ—è¡¨ï¼Œä»ä¸­å–å‡ºé—®ç­”çš„é“¾æ¥ï¼Œç„¶åçˆ¬å–é—®ç­”ã€‚
+# æŠŠæ¯ä¸€å¯¹é—®ç­”å­˜æˆå­—å…¸ï¼Œå†æŠŠå­—å…¸å­˜åˆ°åˆ—è¡¨ä¸­ï¼Œè¿”å›è¿™ä¸ªåˆ—è¡¨
+# å¯ä»¥å‚è€ƒæˆ‘ç»™ä½ æ”¹çš„youtu()å‡½æ•°ä¸­å­—å…¸çš„éƒ¨åˆ†
 def juesheng_data(urls):
     item ={}
     juesheng_list= []
