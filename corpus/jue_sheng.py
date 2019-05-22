@@ -1,13 +1,9 @@
 import requests
-import re 
 from bs4 import BeautifulSoup
 
 
 url = 'http://ask.juesheng.com/all/answered/'
-#爬取http://www.ccutu.com/wenwen/2/，http://www.ccutu.com/wenwen/3/
-# 像这样的链接里面的问题标题的链接，
-# 比如：http://www.ccutu.com/wenwen/answer35435.html
-#把这些链接存到一个列表urls里面，返回这个列表
+
 def page_url(url):
     urls = []
     pag = 1
@@ -16,32 +12,32 @@ def page_url(url):
         pag = pag + 1
         web_data = requests.get(start_url).content
         soup = BeautifulSoup(web_data,'lxml')
-        items = soup.select('#f1  > div.title> div.description > ul> a')
-        #'http://www.ccutu.com/wenwen/answer35452.html'
+        items = soup.select('body > div.wrap > div > div.row > div.col-xs-12.col-md-9.main > div.stream-list.question-stream > section > div.summary > div > a')
+        #body > div.wrap > div > div.row > div.col-xs-12.col-md-9.main > div.stream-list.question-stream > section > div.summary > div > a
+        print(items)
         for item in items:
-            urls.append('http://ask.juesheng.com'+item.get('href'))
-    #print(urls,len(urls))
+            urls.append(item.get('href'))
+    print(urls,len(urls))
     return urls
 
 
-# 参数是page_url()函数返回的列表，从中取出问答的链接，然后爬取问答。
-# 把每一对问答存成字典，再把字典存到列表中，返回这个列表
-# 可以参考我给你改的youtu()函数中字典的部分
+
 def juesheng_data(urls):
     item ={}
     juesheng_list= []
     for url in urls:
         web_data = requests.get(url).content
         soup = BeautifulSoup(web_data,'lxml')
-        question  = soup.select_one('body > div.title >  div.description > a > h').get_text().strip()
-        answer = ''.join(re.findall(r'<p>(.*?)</p>',str(soup.select_one('body  > div.title > div.description > p')))).replace('<br/>','')
+        question  = soup.select_one('body > div.wrap > div > div > div.col-xs-12.col-md-9.main > div.widget-question > h1').get_text().strip()
+        print(question)
+        answer = soup.select_one('#answer > div.media > div > div.content > p').get_text()
         # answer = soup.select('body > div.wenda_cont > div.con_left > ul:nth-child(3) > li')
 
         item = {
             'question':question,
             'answer':answer
         }
-
+        print(item)
         juesheng_list.append(item)
 
     return juesheng_list
@@ -59,3 +55,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
